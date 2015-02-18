@@ -4,12 +4,13 @@
 var React = require('react'),
     Router = require('react-router'),
     Route = Router.Route,
-    DefaultRoute = Router.DefaultRoute;
+    DefaultRoute = Router.DefaultRoute,
+    Dashboard = require("./components/dashboard"),
+    Login = require("./components/login");
     //{ Route, DefaultRoute } = require('react-router');
 
 module.exports = (
-  <Route name='explore' path='/' handler={App}>
-    <Route name='repo' path='/:login/:name' handler={RepoPage} />
-    <Route name='user' path='/:login' handler={UserPage} />
+  <Route name='dashboard' path='/' handler={Dashboard}>
+    <Route name='login' path='/:login' handler={Login} />
   </Route>
 );
