@@ -1,4 +1,3 @@
-
 'use strict';
 
 var React = require('react'),
@@ -7,7 +6,6 @@ var React = require('react'),
     DefaultRoute = Router.DefaultRoute,
     Dashboard = require("./components/dashboard"),
     Login = require("./components/login");
-    //{ Route, DefaultRoute } = require('react-router');
 
 module.exports = (
   <Route name='dashboard' path='/' handler={Dashboard}>

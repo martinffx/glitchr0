@@ -1,9 +1,9 @@
-var React = require("react")
+var React = require("react");
 
 class Login extends React.Component {
-    render {
+    render() {
         return <h1>Login</h1>;
     }
 }
 
-module.exports = Login
+module.exports = Login;

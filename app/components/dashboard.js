@@ -1,9 +1,9 @@
-var React = require("react")
+var React = require("react");
 
 class Dashboard extends React.Component {
-    render {
+    render() {
         return <h1>Dashboard</h1>;
     }
 }
 
-module.exports = Dashboard
+module.exports = Dashboard;

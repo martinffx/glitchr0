@@ -1,3 +1,5 @@
 *.log
 .c9
 dist/*
+*.#*
+node_modules/*
