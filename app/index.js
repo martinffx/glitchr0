@@ -1,8 +1,6 @@
 'use strict';
 
 var React = require('react'),
-    router = require('./router');
+    Login = require('./components/login');
 
-router.run((Handler, state) => {
-  React.render(<Handler {...state} />, document.body);
-});
+React.render(<Login/>, document.getElementById('app'));

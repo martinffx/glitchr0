@@ -21,24 +21,23 @@ var jsBundler = watchify(browserify('./app/index.js', watchify.args));
 jsBundler.transform('babelify');
 
 var getBundleName = function () {
-  //var version = require('./package.json').version;
-  var name = require('./package.json').name;
-  return name + '.' + 'min.js';
+    //var version = require('./package.json').version;
+    var name = require('./package.json').name;
+    return name + '.' + 'min.js';
 };
 
 gulp.task('js', jsBundle); // so you can run `gulp js` to build the file
 jsBundler.on('update', jsBundle); // on any dep update, runs the bundler
 
 function jsBundle() {
-  return jsBundler.bundle()
-    // log errors if they happen
-    .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-    .pipe(source(getBundleName()))
-    .pipe(buffer())
-    .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
-    .pipe(uglify())
-    .pipe(sourcemaps.write('./')) // writes .map file
-    .pipe(gulp.dest('./dist'));
+    return jsBundler.bundle()
+        .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .pipe(source(getBundleName()))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
+        .pipe(uglify())
+        .pipe(sourcemaps.write('./')) // writes .map file
+        .pipe(gulp.dest('./dist'));
 }
 
 gulp.task('styles', function () {
@@ -53,16 +52,17 @@ gulp.task('styles', function () {
 });
 
 gulp.task('test', function() {
-    
+
 });
 
 gulp.task('watch', function(){
-  gulp.watch('sass/**/*.scss', ['styles']);
-  gulp.watch('tests/**/*.js', ['test']);
+    gulp.watch('sass/**/*.scss', ['styles']);
+    gulp.watch('tests/**/*.js', ['test']);
+    gulp.watch('app/**/*.js', ['test', 'js']);
 });
 
 gulp.task('connect', function(){
-  connect.server();
+    connect.server();
 });
 
 
