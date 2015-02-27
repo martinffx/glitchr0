@@ -36,5 +36,8 @@
     "gulp": "^3.8.11",
     "react": "^0.13.0",
     "tumblr.js": "0.0.4"
+  },
+  "dependencies": {
+    "hapi": "^8.2.0"
   }
 }
