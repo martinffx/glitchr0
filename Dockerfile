@@ -1,10 +1,10 @@
-FROM nodesource/node:wheezy
+FROM buildpack-deps:jessie-curl
 
-# Bundle app source
-COPY . /src
-# Install app dependencies
-RUN cd /src; npm install
+RUN mkdir -p /usr/src
+WORKDIR /usr/src
+ONBUILD COPY ./dist /usr/src
 
 ENV PORT 8080
 EXPOSE  8080
-CMD ["node", "/src/server.js"]
+
+CMD [ "npm", "start" ]

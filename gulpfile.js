@@ -12,19 +12,20 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     neat = require('node-neat').includePaths,
     cssmin = require('gulp-cssmin'),
-    rename = require("gulp-rename");
+    rename = require('gulp-rename');
+    //babel = require('gulp-babel');
 
-
-var jsBundler = watchify(browserify('./app/index.js', watchify.args));
-// add any other browserify options or transforms here
-//jsBundler.transform('reactify');
-jsBundler.transform('babelify');
-
-var getBundleName = function () {
-    //var version = require('./package.json').version;
+var getBundleName = function (side) {
+    var version = require('./package.json').version;
     var name = require('./package.json').name;
-    return name + '.' + 'min.js';
+    return name + '.' + side + '-' + version + '.' + 'min.js';
 };
+
+/*
+    JS CLIENT
+*/
+var jsBundler = watchify(browserify('./app/client/index.js', watchify.args));
+jsBundler.transform('babelify');
 
 gulp.task('js', jsBundle); // so you can run `gulp js` to build the file
 jsBundler.on('update', jsBundle); // on any dep update, runs the bundler
@@ -32,14 +33,32 @@ jsBundler.on('update', jsBundle); // on any dep update, runs the bundler
 function jsBundle() {
     return jsBundler.bundle()
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-        .pipe(source(getBundleName()))
+        .pipe(source(getBundleName('client')))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
         .pipe(uglify())
         .pipe(sourcemaps.write('./')) // writes .map file
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./dist/static'));
 }
 
+/*
+
+     SERVER
+
+*/
+gulp.task('server', function() {
+    // return gulp.src('./server.js')
+    //     //.pipe(source(getBundleName('server')))
+    //     .pipe(babel())
+    //     .pipe(gulp.dest('./dist'));
+});
+
+
+/*
+
+     SASS
+
+*/
 gulp.task('styles', function () {
     return gulp.src('sass/main.scss')
         .pipe(sass({
@@ -51,18 +70,26 @@ gulp.task('styles', function () {
         .pipe(gulp.dest('./dist'));
 });
 
+
+/*
+
+     TEST
+
+*/
 gulp.task('test', function() {
 
 });
 
+
+/*
+
+     Watch
+
+*/
 gulp.task('watch', function(){
     gulp.watch('sass/**/*.scss', ['styles']);
     gulp.watch('tests/**/*.js', ['test']);
     gulp.watch('app/**/*.js', ['test', 'js']);
-});
-
-gulp.task('connect', function(){
-    connect.server();
 });
 
 
