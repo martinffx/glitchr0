@@ -93,4 +93,4 @@ gulp.task('watch', function(){
 });
 
 
-gulp.task('default', ['watch', 'connect', 'js', 'styles']);
+gulp.task('default', ['watch', 'client', 'server', 'styles']);
