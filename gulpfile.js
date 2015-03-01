@@ -14,7 +14,8 @@ var gulp = require('gulp'),
     cssmin = require('gulp-cssmin'),
     rename = require('gulp-rename'),
     babel = require('gulp-babel'),
-    shell = require('gulp-shell');
+    shell = require('gulp-shell'),
+    concat = require('gulp-concat');
 
 var getBundleName = function (side) {
     var version = require('./package.json').version;
@@ -25,7 +26,7 @@ var getBundleName = function (side) {
 /*
     JS CLIENT
 */
-var jsBundler = watchify(browserify('./client/index.js', watchify.args));
+var jsBundler = watchify(browserify('./src/client/index.js', watchify.args));
 jsBundler.transform('babelify');
 
 gulp.task('client', jsBundle); // so you can run `gulp js` to build the file
@@ -50,9 +51,11 @@ function jsBundle() {
 
 */
 gulp.task('server', function() {
-    return gulp.src('./index.js')
-        .pipe(source(getBundleName('server')))
+    return gulp.src(['src/index.js', 'src/lib/**/*.js'])
+        .pipe(sourcemaps.init())
         .pipe(babel())
+        .pipe(concat('index.js'))
+        .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./dist'));
 });
 
@@ -64,7 +67,7 @@ gulp.task('server', function() {
 
 */
 gulp.task('styles', function () {
-    return gulp.src('sass/main.scss')
+    return gulp.src('./src/client/sass/main.scss')
         .pipe(sass({
             includePaths: ['styles'].concat(neat)
         }))
@@ -82,8 +85,9 @@ gulp.task('styles', function () {
 
 */
 gulp.task('restart', shell.task([
-    'echo Hello'
+    'sudo docker restart glitchr'
 ]));
+
 
 
 
