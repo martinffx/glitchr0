@@ -1,8 +1,8 @@
 'use strict';
 
 var React = require('react'),
-    router = require('./router');
+    Dashboard = require('./components/dashboard');
 
 router.run((Handler, state) => {
-    React.render(<Handler />, document.getElementById('div#app'));
+    React.render(<Dashboard />, document.getElementById('div#app'));
 });

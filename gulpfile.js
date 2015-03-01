@@ -17,10 +17,10 @@ var gulp = require('gulp'),
     shell = require('gulp-shell'),
     concat = require('gulp-concat');
 
-var getBundleName = function (side) {
+var getBundleName = function () {
     var version = require('./package.json').version;
     var name = require('./package.json').name;
-    return name + '.' + side + '-' + version + '.' + 'min.js';
+    return name + '-' + version + '.' + 'min.js';
 };
 
 /*
@@ -35,9 +35,9 @@ jsBundler.on('update', jsBundle); // on any dep update, runs the bundler
 function jsBundle() {
     return jsBundler.bundle()
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
-        .pipe(source(getBundleName('client')))
+        .pipe(source(getBundleName()))
         .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true})) // loads map from browserify file
+        .pipe(sourcemaps.init({loadMaps: true}))
         .pipe(uglify())
         .pipe(sourcemaps.write('./')) // writes .map file
         .pipe(gulp.dest('./dist/static'));
@@ -67,27 +67,14 @@ gulp.task('server', function() {
 
 */
 gulp.task('styles', function () {
-    return gulp.src('./src/client/sass/main.scss')
+    return gulp.src('./src/sass/main.scss')
         .pipe(sass({
             includePaths: ['styles'].concat(neat)
         }))
         .pipe(cssmin())
         .pipe(rename({suffix: '.min'}))
-        .pipe(gulp.dest('dist'))
         .pipe(gulp.dest('./dist/static'));
 });
-
-
-
-/*
-
-     RESTART
-
-*/
-gulp.task('restart', shell.task([
-    'sudo docker restart glitchr'
-]));
-
 
 
 
@@ -116,11 +103,6 @@ gulp.task('build', ['client', 'server', 'styles']);
 
 */
 gulp.task('watch', ['build'], function(){
-    // Start Docker Container
-    shell([
-        'sudo docker start glitchr'
-    ]);
-
     // Watch Files
     gulp.watch('dist/*.js', ['restart']);
     gulp.watch('sass/**/*.scss', ['styles']);

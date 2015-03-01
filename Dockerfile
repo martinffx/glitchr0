@@ -9,5 +9,6 @@ ONBUILD COPY ./package.json /usr/src
 ENV PORT 8080
 EXPOSE  8080
 
-CMD [ "npm", "install --production"]
+CMD [ "npm", "install --production" ]
+CMD [ "npm", "install -g nodemon" ]
 CMD [ "npm", "start" ]

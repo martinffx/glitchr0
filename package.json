@@ -1,11 +1,12 @@
 {
-  "name": "glitchr",
+
+"name": "glitchr",
   "version": "0.1.0",
   "description": "A better tumblr client",
   "main": "index.js",
   "scripts": {
     "test": "gulp test",
-    "start": "node dist/index.js"
+    "start": "nodemon -w ./dist/index.js ./dist/index.js"
   },
   "repository": {
     "type": "git",

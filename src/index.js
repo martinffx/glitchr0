@@ -8,8 +8,12 @@ server.connection({ port: process.env.PORT });
 
 // Setup View Engine
 server.views({
-    engines: { html: require('handlebars') },
-    path: __dirname + '/lib/templates'
+    defaultExtension: 'jade',
+    engines: { jade: require('jade') },
+    path: __dirname + '/lib/templates',
+    compileOptions: {
+        pretty: true
+    }
 });
 
 // Routes
@@ -40,6 +44,7 @@ server.route({
     }
 });
 
+// Start
 server.start(function () {
     console.log('Server running at:', server.info.uri);
 });
