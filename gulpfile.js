@@ -12,8 +12,9 @@ var gulp = require('gulp'),
     sass = require('gulp-sass'),
     neat = require('node-neat').includePaths,
     cssmin = require('gulp-cssmin'),
-    rename = require('gulp-rename');
-    //babel = require('gulp-babel');
+    rename = require('gulp-rename'),
+    babel = require('gulp-babel'),
+    shell = require('gulp-shell');
 
 var getBundleName = function (side) {
     var version = require('./package.json').version;
@@ -24,10 +25,10 @@ var getBundleName = function (side) {
 /*
     JS CLIENT
 */
-var jsBundler = watchify(browserify('./app/client/index.js', watchify.args));
+var jsBundler = watchify(browserify('./client/index.js', watchify.args));
 jsBundler.transform('babelify');
 
-gulp.task('js', jsBundle); // so you can run `gulp js` to build the file
+gulp.task('client', jsBundle); // so you can run `gulp js` to build the file
 jsBundler.on('update', jsBundle); // on any dep update, runs the bundler
 
 function jsBundle() {
@@ -41,17 +42,20 @@ function jsBundle() {
         .pipe(gulp.dest('./dist/static'));
 }
 
+
+
 /*
 
      SERVER
 
 */
 gulp.task('server', function() {
-    // return gulp.src('./server.js')
-    //     //.pipe(source(getBundleName('server')))
-    //     .pipe(babel())
-    //     .pipe(gulp.dest('./dist'));
+    return gulp.src('./index.js')
+        .pipe(source(getBundleName('server')))
+        .pipe(babel())
+        .pipe(gulp.dest('./dist'));
 });
+
 
 
 /*
@@ -67,8 +71,20 @@ gulp.task('styles', function () {
         .pipe(cssmin())
         .pipe(rename({suffix: '.min'}))
         .pipe(gulp.dest('dist'))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest('./dist/static'));
 });
+
+
+
+/*
+
+     RESTART
+
+*/
+gulp.task('restart', shell.task([
+    'echo Hello'
+]));
+
 
 
 /*
@@ -77,8 +93,17 @@ gulp.task('styles', function () {
 
 */
 gulp.task('test', function() {
-
+    console.log('TODO: run tests');
 });
+
+
+
+/*
+
+     BUILD
+
+*/
+gulp.task('build', ['client', 'server', 'styles']);
 
 
 /*
@@ -86,11 +111,19 @@ gulp.task('test', function() {
      Watch
 
 */
-gulp.task('watch', function(){
+gulp.task('watch', ['build'], function(){
+    // Start Docker Container
+    shell([
+        'sudo docker start glitchr'
+    ]);
+
+    // Watch Files
+    gulp.watch('dist/*.js', ['restart']);
     gulp.watch('sass/**/*.scss', ['styles']);
     gulp.watch('tests/**/*.js', ['test']);
-    gulp.watch('app/**/*.js', ['test', 'js']);
+    gulp.watch('client/**/*.js', ['test', 'client']);
+    gulp.watch('server/**/*.js', ['test', 'server']);
 });
 
 
-gulp.task('default', ['watch', 'client', 'server', 'styles']);
+gulp.task('default', ['watch']);
