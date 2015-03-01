@@ -1,0 +1,21 @@
+@import "bourbon";
+@import "base/base";
+@import "neat";
+
+
+div.container {
+    @include outer-container(100%);
+
+    div.container {
+        @include span-columns(8);
+        @include shift(2);
+
+        margin-top: 100px;
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+        }
+    }
+
+}
