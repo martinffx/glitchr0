@@ -22,7 +22,8 @@ server.route({
     method: 'GET',
     path: '/',
     handler: function (request, reply) {
-        reply.view('index');
+        reply('hello');
+        //reply.view('index');
     }
 });
 

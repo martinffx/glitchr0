@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "gulp test",
-    "start": "nodemon -w ./dist/index.js ./dist/index.js"
+    "start": "nodemon -w ./dist ./dist/index.js"
   },
   "repository": {
     "type": "git",

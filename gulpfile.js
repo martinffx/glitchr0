@@ -104,11 +104,10 @@ gulp.task('build', ['client', 'server', 'styles']);
 */
 gulp.task('watch', ['build'], function(){
     // Watch Files
-    gulp.watch('dist/*.js', ['restart']);
-    gulp.watch('sass/**/*.scss', ['styles']);
-    gulp.watch('tests/**/*.js', ['test']);
-    gulp.watch('client/**/*.js', ['test', 'client']);
-    gulp.watch('server/**/*.js', ['test', 'server']);
+    gulp.watch('./src/sass/**/*.scss', ['styles']);
+    gulp.watch('./tests/**/*.js', ['test']);
+    gulp.watch('./src/client/**/*.js', ['test', 'client']);
+    gulp.watch(['./src/index.js', './src/lib/**/*.js'], ['test', 'server']);
 });
 
 
