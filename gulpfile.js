@@ -50,13 +50,18 @@ function jsBundle() {
      SERVER
 
 */
-gulp.task('server', function() {
+gulp.task('server', ['templates'], function() {
     return gulp.src(['src/index.js', 'src/lib/**/*.js'])
         .pipe(sourcemaps.init())
         .pipe(babel())
         .pipe(concat('index.js'))
         .pipe(sourcemaps.write('.'))
         .pipe(gulp.dest('./dist'));
+});
+
+gulp.task('templates', function() {
+    return gulp.src('src/lib/templates/*')
+        .pipe(gulp.dest('./dist/lib/templates'));
 });
 
 
@@ -108,6 +113,7 @@ gulp.task('watch', ['build'], function(){
     gulp.watch('./tests/**/*.js', ['test']);
     gulp.watch('./src/client/**/*.js', ['test', 'client']);
     gulp.watch(['./src/index.js', './src/lib/**/*.js'], ['test', 'server']);
+    gulp.watch('./src/lib/templates/**/*', ['server']);
 });
 
 

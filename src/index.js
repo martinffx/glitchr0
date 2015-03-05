@@ -1,10 +1,18 @@
 'use strict';
 
 require("babel/register");
-var Hapi = require('hapi');
+var Hapi = require('hapi'),
+    Path = require('path'),
+    server = new Hapi.Server();
 
-var server = new Hapi.Server();
-server.connection({ port: process.env.PORT });
+server.connection({
+    port: process.env.PORT,
+    routes: {
+        files: {
+            relativeTo: Path.join(__dirname, 'static')
+        }
+    }
+ });
 
 // Setup View Engine
 server.views({
@@ -17,13 +25,22 @@ server.views({
 });
 
 // Routes
+
+// Static
+server.route({
+    method: 'GET',
+    path: '/static/main.min.css',
+    handler: {
+        file: 'main.min.css'
+    }
+});
+
 // Home
 server.route({
     method: 'GET',
     path: '/',
     handler: function (request, reply) {
-        reply('hello');
-        //reply.view('index');
+        reply.view('index');
     }
 });
 
@@ -44,6 +61,11 @@ server.route({
         reply('Hello, ' + encodeURIComponent(request.params.name) + '!');
     }
 });
+
+
+
+
+
 
 // Start
 server.start(function () {
