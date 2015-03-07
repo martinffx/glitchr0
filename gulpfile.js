@@ -15,7 +15,8 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     babel = require('gulp-babel'),
     shell = require('gulp-shell'),
-    concat = require('gulp-concat');
+    concat = require('gulp-concat'),
+    del = require('del');
 
 var getBundleName = function () {
     var version = require('./package.json').version;
@@ -23,13 +24,15 @@ var getBundleName = function () {
     return name + '-' + version + '.' + 'min.js';
 };
 
+
+
 /*
     JS CLIENT
 */
 var jsBundler = watchify(browserify('./src/client/index.js', watchify.args));
 jsBundler.transform('babelify');
 
-gulp.task('client', jsBundle); // so you can run `gulp js` to build the file
+gulp.task('client', ['test.client', 'styles'], jsBundle); // so you can run `gulp js` to build the file
 jsBundler.on('update', jsBundle); // on any dep update, runs the bundler
 
 function jsBundle() {
@@ -47,31 +50,10 @@ function jsBundle() {
 
 /*
 
-     SERVER
-
-*/
-gulp.task('server', ['templates'], function() {
-    return gulp.src(['src/index.js', 'src/lib/**/*.js'])
-        .pipe(sourcemaps.init())
-        .pipe(babel())
-        .pipe(concat('index.js'))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest('./dist'));
-});
-
-gulp.task('templates', function() {
-    return gulp.src('src/lib/templates/*')
-        .pipe(gulp.dest('./dist/lib/templates'));
-});
-
-
-
-/*
-
      SASS
 
 */
-gulp.task('styles', function () {
+gulp.task('styles', ['clean.client'], function () {
     return gulp.src('./src/sass/main.scss')
         .pipe(sass({
             includePaths: ['styles'].concat(neat)
@@ -85,11 +67,47 @@ gulp.task('styles', function () {
 
 /*
 
+     SERVER
+
+*/
+gulp.task('server', ['test.server', 'templates'], function() {
+    return gulp.src(['src/server/**/*.js'])
+        .pipe(babel())
+        .pipe(gulp.dest('./dist/server'));
+});
+
+gulp.task('templates', ['clean.server'], function() {
+    return gulp.src('src/server/templates/*')
+        .pipe(gulp.dest('./dist/server/templates'));
+});
+
+
+
+/*
+
      TEST
 
 */
-gulp.task('test', function() {
+gulp.task('test.server', function() {
     console.log('TODO: run tests');
+});
+
+gulp.task('test.client', function() {
+    console.log('TODO: run tests');
+});
+
+
+/*
+
+     CLEAN
+
+*/
+gulp.task('clean.server', function(cb) {
+  del(['./dist/server'], cb);
+});
+
+gulp.task('clean.client', function(cb) {
+  del(['./dist/static'], cb);
 });
 
 
@@ -99,7 +117,7 @@ gulp.task('test', function() {
      BUILD
 
 */
-gulp.task('build', ['client', 'server', 'styles']);
+gulp.task('build', ['client', 'server', ]);
 
 
 /*
@@ -110,7 +128,8 @@ gulp.task('build', ['client', 'server', 'styles']);
 gulp.task('watch', ['build'], function(){
     // Watch Files
     gulp.watch('./src/sass/**/*.scss', ['styles']);
-    gulp.watch('./tests/**/*.js', ['test']);
+    gulp.watch('./tests/client/**/*.js', ['test.client']);
+    gulp.watch('./tests/server/**/*.js', ['test.server']);
     gulp.watch('./src/client/**/*.js', ['test', 'client']);
     gulp.watch(['./src/index.js', './src/lib/**/*.js'], ['test', 'server']);
     gulp.watch('./src/lib/templates/**/*', ['server']);

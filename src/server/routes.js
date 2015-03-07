@@ -1,28 +1,6 @@
 'use strict';
 
-require("babel/register");
-var Hapi = require('hapi'),
-    Path = require('path'),
-    server = new Hapi.Server();
-
-server.connection({
-    port: process.env.PORT,
-    routes: {
-        files: {
-            relativeTo: Path.join(__dirname, 'static')
-        }
-    }
- });
-
-// Setup View Engine
-server.views({
-    defaultExtension: 'jade',
-    engines: { jade: require('jade') },
-    path: __dirname + '/lib/templates',
-    compileOptions: {
-        pretty: true
-    }
-});
+var server = require('./server');
 
 // Routes
 
@@ -62,12 +40,4 @@ server.route({
     }
 });
 
-
-
-
-
-
-// Start
-server.start(function () {
-    console.log('Server running at:', server.info.uri);
-});
+module.exports = server;

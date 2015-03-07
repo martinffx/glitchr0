@@ -1,12 +1,11 @@
 {
-
-"name": "glitchr",
+  "name": "glitchr",
   "version": "0.1.0",
   "description": "A better tumblr client",
   "main": "index.js",
   "scripts": {
     "test": "gulp test",
-    "start": "nodemon -w ./dist ./dist/index.js"
+    "start": "nodemon -w ./dist/server ./dist/server/index.js"
   },
   "repository": {
     "type": "git",
@@ -21,6 +20,7 @@
   "devDependencies": {
     "babelify": "^5.0.3",
     "browserify": "^8.1.1",
+    "del": "^1.1.1",
     "gulp": "^3.8.11",
     "gulp-babel": "^4.0.0",
     "gulp-concat": "^2.5.2",
@@ -43,6 +43,7 @@
   },
   "dependencies": {
     "hapi": "^8.2.0",
+    "jade": "^1.9.2",
     "tumblr.js": "0.0.4"
   }
 }
