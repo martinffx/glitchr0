@@ -9,7 +9,6 @@ ADD package.json package.json
 ENV PORT 8080
 EXPOSE  8080
 
-RUN npm install -g nodemon
 RUN npm install --production
 
-CMD [ "npm", "start" ]
+ENTRYPOINT [ "npm", "start" ]
