@@ -1,5 +1,6 @@
 'use strict';
 
+require('newrelic');
 var server = require('./routes');
 
 // Start
