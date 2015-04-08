@@ -16,7 +16,8 @@ var gulp = require('gulp'),
     babel = require('gulp-babel'),
     shell = require('gulp-shell'),
     concat = require('gulp-concat'),
-    del = require('del');
+    del = require('del'),
+    jest = require('jest-cli');
 
 var getBundleName = function () {
     var version = require('./package.json').version;
@@ -95,7 +96,7 @@ gulp.task('test.server', function() {
 gulp.task('test.client', function() {
     console.log('TODO: run tests');
 });
-
+xo
 
 /*
 
